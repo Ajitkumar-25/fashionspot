@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from "next/link";
 
-const Hoodies = () => {
+const Stickers = () => {
   return (
     <div><section className="text-gray-600 body-font">
     <div className="container px-5 py-10 mx-auto">
@@ -12,7 +12,7 @@ const Hoodies = () => {
               <img
                 alt="ecommerce"
                 className="object-cover object-center w-full h-full block"
-                src="https://m.media-amazon.com/images/I/510SGdMK0BL._SX569_.jpg"
+                src="https://m.media-amazon.com/images/I/91AvxUHcbdL._SL1500_.jpg"
               />
             </div>
             <div className="mt-4 text-center">
@@ -33,7 +33,7 @@ const Hoodies = () => {
             <img
                 alt="ecommerce"
                 className="object-cover object-center w-full h-full block"
-                src="https://m.media-amazon.com/images/I/510SGdMK0BL._SX569_.jpg"
+                src="https://m.media-amazon.com/images/I/91AvxUHcbdL._SL1500_.jpg"
               />
             </div>
             <div className="mt-4 text-center">
@@ -54,7 +54,7 @@ const Hoodies = () => {
             <img
                 alt="ecommerce"
                 className="object-cover object-center w-full h-full block"
-                src="https://m.media-amazon.com/images/I/510SGdMK0BL._SX569_.jpg"
+                src="https://m.media-amazon.com/images/I/91AvxUHcbdL._SL1500_.jpg"
               />
             </div>
             <div className="mt-4 text-center">
@@ -75,7 +75,7 @@ const Hoodies = () => {
             <img
                 alt="ecommerce"
                 className="object-cover object-center w-full h-full block"
-                src="https://m.media-amazon.com/images/I/510SGdMK0BL._SX569_.jpg"
+                src="https://m.media-amazon.com/images/I/91AvxUHcbdL._SL1500_.jpg"
               />
             </div>
             <div className="mt-4 text-center">
@@ -96,7 +96,7 @@ const Hoodies = () => {
             <img
                 alt="ecommerce"
                 className="object-cover object-center w-full h-full block"
-                src="https://m.media-amazon.com/images/I/510SGdMK0BL._SX569_.jpg"
+                src="https://m.media-amazon.com/images/I/91AvxUHcbdL._SL1500_.jpg"
               />
             </div>
             <div className="mt-4 text-center">
@@ -117,7 +117,7 @@ const Hoodies = () => {
             <img
                 alt="ecommerce"
                 className="object-cover object-center w-full h-full block"
-                src="https://m.media-amazon.com/images/I/510SGdMK0BL._SX569_.jpg"
+                src="https://m.media-amazon.com/images/I/91AvxUHcbdL._SL1500_.jpg"
               />
             </div>
             <div className="mt-4 text-center">
@@ -138,7 +138,7 @@ const Hoodies = () => {
             <img
                 alt="ecommerce"
                 className="object-cover object-center w-full h-full block"
-                src="https://m.media-amazon.com/images/I/510SGdMK0BL._SX569_.jpg"
+                src="https://m.media-amazon.com/images/I/91AvxUHcbdL._SL1500_.jpg"
               />
             </div>
             <div className="mt-4 text-center">
@@ -159,7 +159,7 @@ const Hoodies = () => {
             <img
                 alt="ecommerce"
                 className="object-cover object-center w-full h-full block"
-                src="https://m.media-amazon.com/images/I/510SGdMK0BL._SX569_.jpg"
+                src="https://m.media-amazon.com/images/I/91AvxUHcbdL._SL1500_.jpg"
               />
             </div>
             <div className="mt-4 text-center">
@@ -180,4 +180,4 @@ const Hoodies = () => {
   )
 }
 
-export default Hoodies
+export default Stickers
