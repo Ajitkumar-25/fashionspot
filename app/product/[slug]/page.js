@@ -5,11 +5,9 @@ export default function Page({ params }) {
   const [pincode, setPincode] = useState("");
   const [isServiceable, setIsServiceable] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const checkPincode = async () => {
     setLoading(true);
-    setError(null);
 
     try {
       const response = await fetch("/api/pincode", {
@@ -25,10 +23,8 @@ export default function Page({ params }) {
         setIsServiceable(result.serviceable);
       } else {
         setIsServiceable(false);
-        setError(result.message || "Failed to check pincode");
       }
     } catch (error) {
-      setError("An error occurred while checking the pincode");
     } finally {
       setLoading(false);
     }
@@ -169,6 +165,9 @@ export default function Page({ params }) {
                 <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
                   Add To Cart
                 </button>
+                <button className="flex ml-4 text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
+                  Buy Now
+                </button>
                 <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
                   <svg
                     fill="currentColor"
@@ -199,7 +198,6 @@ export default function Page({ params }) {
                 >
                   {loading ? "Checking..." : "Check Pincode Availability"}
                 </button>
-                {error && <p className="mt-2 text-red-500">{error}</p>}
                 {isServiceable !== null && (
                   <p
                     className={`mt-2 ${
@@ -207,8 +205,8 @@ export default function Page({ params }) {
                     }`}
                   >
                     {isServiceable
-                      ? "Pincode is serviceable"
-                      : "Pincode is not serviceable"}
+                      ? "Bam!! We Deliver In this Pincode"
+                      : "Sorry we Do Not Deliver To This Pincode"}
                   </p>
                 )}
               </div>
