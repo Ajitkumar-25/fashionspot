@@ -6,8 +6,8 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 import { XMarkIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
-import { useCart } from "@/context/cartContext";
-
+import { useCart } from "@/context/CartContext";
+import Link from "next/link";
 // const products = [
 //   {
 //     id: 1,
@@ -197,9 +197,9 @@ const SidebarCart = ({ open, onClose }) => {
                         Shipping and taxes calculated at checkout.
                       </p>
                       <div className="mt-6">
-                        <button className="w-full flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
+                        <Link href={'/checkout'}><button className="w-full flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
                           Checkout
-                        </button>
+                        </button></Link>
                       </div>
                       <div className="mt-2">
                         <button

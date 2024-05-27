@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import SidebarCart from "@/components/cart";
-import { useCart } from "@/context/cartContext";
+import { useCart } from "@/context/CartContext";
 
 const Navbar = () => {
   const [cartOpen, setCartOpen] = useState(false);

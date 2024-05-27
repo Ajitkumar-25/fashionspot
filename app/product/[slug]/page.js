@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useCart } from "@/context/cartContext";
+import { useCart } from "@/context/CartContext";
 
 export default function Page({ params }) {
   const [pincode, setPincode] = useState("");
