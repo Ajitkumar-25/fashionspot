@@ -1,31 +1,44 @@
-import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  Transition,
+  TransitionChild,
+} from "@headlessui/react";
+import { XMarkIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
+import { useCart } from "@/context/cartContext";
 
-const products = [
-  {
-    id: 1,
-    name: 'Throwback Hip Bag',
-    href: '#',
-    color: 'Salmon',
-    price: '$90.00',
-    quantity: 1,
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg',
-    imageAlt: 'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
-  },
-  {
-    id: 2,
-    name: 'Medium Stuff Satchel',
-    href: '#',
-    color: 'Blue',
-    price: '$32.00',
-    quantity: 1,
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg',
-    imageAlt:
-      'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
-  },
-]
+// const products = [
+//   {
+//     id: 1,
+//     name: "Throwback Hip Bag",
+//     href: "#",
+//     color: "Salmon",
+//     price: "$90.00",
+//     quantity: 1,
+//     imageSrc:
+//       "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg",
+//     imageAlt:
+//       "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
+//   },
+//   {
+//     id: 2,
+//     name: "Medium Stuff Satchel",
+//     href: "#",
+//     color: "Blue",
+//     price: "$32.00",
+//     quantity: 1,
+//     imageSrc:
+//       "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg",
+//     imageAlt:
+//       "Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.",
+//   },
+// ];
 
 const SidebarCart = ({ open, onClose }) => {
+  const { cart, subtotal, addToCart, removeFromCart, clearCart } = useCart();
+
+
   return (
     <Transition show={open}>
       <Dialog className="relative z-10" onClose={onClose}>
@@ -55,7 +68,9 @@ const SidebarCart = ({ open, onClose }) => {
                   <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                     <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                       <div className="flex items-start justify-between">
-                        <DialogTitle className="text-lg font-medium text-gray-900">Shopping cart</DialogTitle>
+                        <DialogTitle className="text-lg font-medium text-gray-900">
+                          Shopping cart
+                        </DialogTitle>
                         <div className="ml-3 flex h-7 items-center">
                           <button
                             type="button"
@@ -71,42 +86,103 @@ const SidebarCart = ({ open, onClose }) => {
 
                       <div className="mt-8">
                         <div className="flow-root">
-                          <ul role="list" className="-my-6 divide-y divide-gray-200">
-                            {products.map((product) => (
-                              <li key={product.id} className="flex py-6">
-                                <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                  <img
-                                    src={product.imageSrc}
-                                    alt={product.imageAlt}
-                                    className="h-full w-full object-cover object-center"
-                                  />
-                                </div>
-
-                                <div className="ml-4 flex flex-1 flex-col">
-                                  <div>
-                                    <div className="flex justify-between text-base font-medium text-gray-900">
-                                      <h3>
-                                        <a href={product.href}>{product.name}</a>
-                                      </h3>
-                                      <p className="ml-4">{product.price}</p>
+                          <ul
+                            role="list"
+                            className="-my-6 divide-y divide-gray-200"
+                          >
+                            {Object.keys(cart).length == 0 ? (
+                              <div>
+                                <h1 className=" text-red-600 text-center">
+                                  Cart is Empty
+                                </h1>
+                              </div>
+                            ) : (
+                              Object.keys(cart).map((product) => {
+                                return (
+                                  <li key={product} className="flex py-6">
+                                    <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                      <img
+                                        src={product.imageSrc}
+                                        alt={product.imageAlt}
+                                        className="h-full w-full object-cover object-center"
+                                      />
                                     </div>
-                                    <p className="mt-1 text-sm text-gray-500">{product.color}</p>
-                                  </div>
-                                  <div className="flex flex-1 items-end justify-between text-sm">
-                                    <p className="text-gray-500">Qty {product.quantity}</p>
 
-                                    <div className="flex">
-                                      <button
-                                        type="button"
-                                        className="font-medium text-indigo-600 hover:text-indigo-500"
-                                      >
-                                        Remove
-                                      </button>
+                                    <div className="ml-4 flex flex-1 flex-col">
+                                      <div>
+                                        <div className="flex justify-between text-base font-medium text-gray-900">
+                                          <h3>
+                                            <a href={product.href}>
+                                              {cart[product].name}
+                                            </a>
+                                          </h3>
+                                          <p className="ml-4">
+                                            {cart[product].price}
+                                          </p>
+                                        </div>
+                                        <p className="mt-1 text-sm text-gray-500">
+                                          {cart[product].variant}
+                                        </p>
+                                      </div>
+                                      <div className="flex flex-1 items-end justify-between text-sm">
+                                        <div className="flex items-center space-x-2">
+                                          <button
+                                            type="button"
+                                            className="text-gray-500 hover:text-gray-700"
+                                          >
+                                            <MinusIcon
+                                              className="h-5 w-5"
+                                              aria-hidden="true"
+                                              onClick={() => {
+                                                removeFromCart(
+                                                  product,
+                                                  1,
+                                                  cart[product].price,
+                                                  cart[product].name,
+                                                  cart[product].size,
+                                                  cart[product].variant
+                                                );
+                                              }}
+                                            />
+                                          </button>
+                                          <p className="text-gray-500">
+                                            {cart[product].qty}
+                                          </p>
+                                          <button
+                                            type="button"
+                                            className="text-gray-500 hover:text-gray-700"
+                                          >
+                                            <PlusIcon
+                                              className="h-5 w-5"
+                                              aria-hidden="true"
+                                              onClick={() => {
+                                                addToCart(
+                                                  product,
+                                                  1,
+                                                  cart[product].price,
+                                                  cart[product].name,
+                                                  cart[product].size,
+                                                  cart[product].variant
+                                                );
+                                              }}
+                                            />
+                                          </button>
+                                        </div>
+
+                                        <div className="flex">
+                                          <button
+                                            type="button"
+                                            className="font-medium text-indigo-600 hover:text-indigo-500"
+                                          >
+                                            Remove
+                                          </button>
+                                        </div>
+                                      </div>
                                     </div>
-                                  </div>
-                                </div>
-                              </li>
-                            ))}
+                                  </li>
+                                );
+                              })
+                            )}
                           </ul>
                         </div>
                       </div>
@@ -115,28 +191,28 @@ const SidebarCart = ({ open, onClose }) => {
                     <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                       <div className="flex justify-between text-base font-medium text-gray-900">
                         <p>Subtotal</p>
-                        <p>$262.00</p>
+                        <p>${subtotal}</p>
                       </div>
-                      <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
+                      <p className="mt-0.5 text-sm text-gray-500">
+                        Shipping and taxes calculated at checkout.
+                      </p>
                       <div className="mt-6">
-                        <a
-                          href="#"
-                          className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-                        >
+                        <button className="w-full flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
                           Checkout
-                        </a>
+                        </button>
                       </div>
                       <div className="mt-2">
-                        <a
-                          href="#"
-                          className="flex items-center justify-center rounded-md border border-transparent bg-red-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-red-700"
+                        <button
+                          onClick={clearCart}
+                          className="w-full flex items-center justify-center rounded-md border border-transparent bg-red-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-red-700"
                         >
                           Clear Cart
-                        </a>
+                        </button>
                       </div>
+
                       <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                         <p>
-                          or{' '}
+                          or{" "}
                           <button
                             type="button"
                             className="font-medium text-indigo-600 hover:text-indigo-500"

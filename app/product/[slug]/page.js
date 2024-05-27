@@ -1,10 +1,12 @@
 "use client";
 import { useState } from "react";
+import { useCart } from "@/context/cartContext";
 
 export default function Page({ params }) {
   const [pincode, setPincode] = useState("");
   const [isServiceable, setIsServiceable] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { cart, subtotal, addToCart, removeFromCart, clearCart } = useCart();
 
   const checkPincode = async () => {
     setLoading(true);
@@ -162,7 +164,12 @@ export default function Page({ params }) {
                 <span className="title-font font-medium text-2xl text-gray-900">
                   $58.00
                 </span>
-                <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
+                <button
+                  onClick={() => {
+                    addToCart("itemCode", 1, 58, "test", "size", "blue");
+                  }}
+                  className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+                >
                   Add To Cart
                 </button>
                 <button className="flex ml-4 text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">

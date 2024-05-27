@@ -3,9 +3,13 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import SidebarCart from "@/components/cart";
+import { useCart } from "@/context/cartContext";
 
 const Navbar = () => {
   const [cartOpen, setCartOpen] = useState(false);
+  const { cart, subtotal, addToCart, removeFromCart, clearCart} = useCart();
+  //console everything 
+  // console.log(cart, subtotal, addToCart, removeFromCart, clearCart);
 
   const toggleCart = () => {
     setCartOpen(!cartOpen);
