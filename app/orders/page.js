@@ -16,14 +16,14 @@ const Orders = () => {
               <p className="leading-relaxed mb-4">
                 Your Order has been Successfully Placed
               </p>
-              <div class="flex mb-4">
-                <a class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">
+              <div className="flex mb-4">
+                <a className="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">
                   Item
                 </a>
-                <a class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">
+                <a className="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">
                   Quantity
                 </a>
-                <a class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">
+                <a className="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">
                   Total
                 </a>
               </div>

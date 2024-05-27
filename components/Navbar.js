@@ -4,6 +4,7 @@ import Link from "next/link";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import SidebarCart from "@/components/cart";
 import { useCart } from "@/context/CartContext";
+import{MdAccountCircle} from "react-icons/md"
 
 const Navbar = () => {
   const [cartOpen, setCartOpen] = useState(false);
@@ -44,6 +45,10 @@ const Navbar = () => {
               Mugs
             </Link>
           </nav>
+          <Link href={'/signup'}
+          className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
+            <MdAccountCircle className="text-3xl"/>
+          </Link>
           <button
             className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0"
             onClick={toggleCart}
