@@ -1,4 +1,39 @@
+"use client";
+import { useState } from "react";
+
 export default function Page({ params }) {
+  const [pincode, setPincode] = useState("");
+  const [isServiceable, setIsServiceable] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const checkPincode = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/pincode", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ pincode }),
+      });
+      const result = await response.json();
+
+      if (result.success) {
+        setIsServiceable(result.serviceable);
+      } else {
+        setIsServiceable(false);
+        setError(result.message || "Failed to check pincode");
+      }
+    } catch (error) {
+      setError("An error occurred while checking the pincode");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div>
       <section className="text-gray-600 body-font overflow-hidden">
@@ -8,7 +43,6 @@ export default function Page({ params }) {
               alt="ecommerce"
               className="lg:w-1/2 w-full lg:h-auto px-24 object-fit object-center rounded"
               src="https://m.media-amazon.com/images/I/510SGdMK0BL._SX569_.jpg"
-
             />
             <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
               <h2 className="text-sm title-font text-gray-500 tracking-widest">
@@ -19,50 +53,23 @@ export default function Page({ params }) {
               </h1>
               <div className="flex mb-4">
                 <span className="flex items-center">
-                  <svg
-                    fill="currentColor"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="w-4 h-4 text-indigo-500"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                  </svg>
-                  <svg
-                    fill="currentColor"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="w-4 h-4 text-indigo-500"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                  </svg>
-                  <svg
-                    fill="currentColor"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="w-4 h-4 text-indigo-500"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                  </svg>
-                  <svg
-                    fill="currentColor"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="w-4 h-4 text-indigo-500"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                  </svg>
+                  {/* Star ratings */}
+                  {Array(4)
+                    .fill()
+                    .map((_, index) => (
+                      <svg
+                        key={index}
+                        fill="currentColor"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        className="w-4 h-4 text-indigo-500"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                      </svg>
+                    ))}
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -76,7 +83,7 @@ export default function Page({ params }) {
                   </svg>
                   <span className="text-gray-600 ml-3">4 Reviews</span>
                 </span>
-                <span className="flex ml-3 pl-3 py-2 border-l-2 border-gray-200 space-x-2s">
+                <span className="flex ml-3 pl-3 py-2 border-l-2 border-gray-200 space-x-2">
                   <a className="text-gray-500">
                     <svg
                       fill="currentColor"
@@ -174,6 +181,36 @@ export default function Page({ params }) {
                     <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
                   </svg>
                 </button>
+              </div>
+
+              {/* Pincode Checker */}
+              <div className="mt-6">
+                <input
+                  type="text"
+                  placeholder="Enter Pincode"
+                  value={pincode}
+                  onChange={(e) => setPincode(e.target.value)}
+                  className="border-2 border-gray-300 rounded-lg p-2 w-full"
+                />
+                <button
+                  onClick={checkPincode}
+                  className="mt-2 w-full text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+                  disabled={loading}
+                >
+                  {loading ? "Checking..." : "Check Pincode Availability"}
+                </button>
+                {error && <p className="mt-2 text-red-500">{error}</p>}
+                {isServiceable !== null && (
+                  <p
+                    className={`mt-2 ${
+                      isServiceable ? "text-green-500" : "text-red-500"
+                    }`}
+                  >
+                    {isServiceable
+                      ? "Pincode is serviceable"
+                      : "Pincode is not serviceable"}
+                  </p>
+                )}
               </div>
             </div>
           </div>
