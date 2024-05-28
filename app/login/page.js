@@ -4,12 +4,14 @@ import { IoIosRocket } from "react-icons/io";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const notify = () => toast.success("Logged in Successfully");
   const notify2 = () => toast.error("Failed to login");
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,6 +42,8 @@ export default function Login() {
       console.log("User logged in:", data);
       notify();
       localStorage.setItem("token", data.token);
+      // window.location.reload();
+      setTimeout(router.push("/"), 1000);
     } catch (error) {
       console.error("Failed to login:", error);
       notify2();

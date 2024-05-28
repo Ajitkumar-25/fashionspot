@@ -1,23 +1,36 @@
-"use client"
-import React, { useState } from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import SidebarCart from "@/components/cart";
-import { useCart } from "@/context/CartContext";
-import{MdAccountCircle} from "react-icons/md"
+import { MdAccountCircle } from "react-icons/md";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Navbar = () => {
   const [cartOpen, setCartOpen] = useState(false);
-  const { cart, subtotal, addToCart, removeFromCart, clearCart} = useCart();
-  //console everything 
-  // console.log(cart, subtotal, addToCart, removeFromCart, clearCart);
+  const [isLoggedIn, setIsLoggedIn] = useState({ value: null });
+  const notify = () => toast.success("Logged out Successfully");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(token);
+  }, []);
 
   const toggleCart = () => {
     setCartOpen(!cartOpen);
   };
 
+  const handlelogout = () => {
+    localStorage.removeItem("token");
+    notify();
+    setIsLoggedIn(null);
+    window.location.reload();
+  };
+
   return (
     <div>
+      <ToastContainer position="bottom-right" />
       <header className="text-gray-600 body-font">
         <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
           <a className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
@@ -45,15 +58,34 @@ const Navbar = () => {
               Mugs
             </Link>
           </nav>
-          <Link href={'/signup'}
-          className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
-            <MdAccountCircle className="text-3xl"/>
-          </Link>
+          {isLoggedIn ? (
+            <>
+              <Link
+                href={"/orders"}
+                className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0"
+              >
+                <MdAccountCircle className="text-4xl text-orange-700" />
+              </Link>
+              <button
+                onClick={handlelogout}
+                className=" text-white inline-flex items-center bg-green-500 border-0 py-1 px-3 focus:outline-none hover:bg-green-800 rounded text-base mt-4 md:mt-0"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link
+              href={"/login"}
+              className=" text-white inline-flex items-center bg-green-500 border-0 py-1 px-3 focus:outline-none hover:bg-green-800 rounded text-base mt-4 md:mt-0"
+            >
+              Login
+            </Link>
+          )}
           <button
             className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0"
             onClick={toggleCart}
           >
-            <AiOutlineShoppingCart className="text-3xl" />
+            <AiOutlineShoppingCart className="text-4xl  text-black " />
           </button>
         </div>
       </header>
