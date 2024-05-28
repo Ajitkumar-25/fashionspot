@@ -39,6 +39,7 @@ export default function Login() {
       // Handle success (e.g., redirect to dashboard or show success message)
       console.log("User logged in:", data);
       notify();
+      localStorage.setItem("token", data.token);
     } catch (error) {
       console.error("Failed to login:", error);
       notify2();
