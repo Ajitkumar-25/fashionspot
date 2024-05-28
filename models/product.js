@@ -24,10 +24,12 @@ const ProductSchema = new mongoose.Schema(
       required: true,
     },
     size: {
-      type: String,
+      type: [String], // Array of strings
+      required: true,
     },
     color: {
-      type: String,
+      type: [String], // Array of strings
+      required: true,
     },
     price: {
       type: Number,
@@ -40,4 +42,6 @@ const ProductSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-module.exports = mongoose.models.Product || mongoose.model('Product', ProductSchema);
+
+module.exports =
+  mongoose.models.Product || mongoose.model("Product", ProductSchema);

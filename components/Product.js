@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { FaShoppingCart, FaMoneyBillWave } from "react-icons/fa";
 
 const Products = ({ category }) => {
   const [products, setProducts] = useState([]);
@@ -33,7 +34,11 @@ const Products = ({ category }) => {
                         alt="ecommerce"
                         className="object-cover object-center w-full h-full block"
                         src={item.image}
-                        style={{ width: "300px", height: "300px", objectFit: "cover" }}
+                        style={{
+                          width: "300px",
+                          height: "300px",
+                          objectFit: "cover",
+                        }}
                       />
                     </div>
                     <div className="mt-4 text-center">
@@ -44,7 +49,24 @@ const Products = ({ category }) => {
                         {item.title}
                       </h2>
                       <p className="mt-1">${item.price}</p>
-                      <p className="mt-1">S M L XL XXL</p>
+                      <div className="flex justify-center">
+                        {item.size.map((size) => (
+                          <div
+                            key={size}
+                            className="border border-black px-2 py-1 m-2 rounded-sm"
+                          >
+                            {size}
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-4 flex justify-center items-center">
+                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center mr-4">
+                          <FaMoneyBillWave className="mr-2" /> Buy Now
+                        </button>
+                        <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center">
+                          <FaShoppingCart className="mr-2" /> Add to Cart
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </Link>
