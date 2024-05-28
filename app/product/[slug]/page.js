@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 import { FaShoppingCart, FaMoneyBillWave } from "react-icons/fa";
 import Link from "next/link";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function ProductPage({ params }) {
   const slug = params.slug;
@@ -13,6 +15,10 @@ export default function ProductPage({ params }) {
   const { addToCart } = useCart();
   const [selsize, setselsize] = useState("");
   const [selcolor, setselcolor] = useState("");
+
+  const notify = () => toast("Product Added To cart!");
+  const notify2 = () => toast.success("Your Pincode is Servicable");
+  const notify3 = () => toast.error("Your Pincode is Not Servicable");
 
   // console.log(slug);
 
@@ -46,11 +52,18 @@ export default function ProductPage({ params }) {
 
       if (result.success) {
         setIsServiceable(result.serviceable);
+        if (result.serviceable) {
+          notify2(); // Notify success if the pincode is serviceable
+        } else {
+          notify3(); // Notify error if the pincode is not serviceable
+        }
       } else {
         setIsServiceable(false);
+        notify3(); // Notify error if the pincode is not serviceable
       }
     } catch (error) {
       console.error(error);
+      notify3(); // Notify error in case of any error
     } finally {
       setLoading(false);
     }
@@ -58,6 +71,7 @@ export default function ProductPage({ params }) {
 
   return (
     <div>
+      <ToastContainer position="bottom-right" />
       <section className="text-gray-600 body-font overflow-hidden">
         <div className="container px-5 py-16 mx-auto">
           <div className="lg:w-4/5 mx-auto flex flex-wrap">
@@ -215,13 +229,16 @@ export default function ProductPage({ params }) {
                       selsize,
                       selcolor
                     );
+                    notify();
                   }}
                   className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
                 >
                   <FaShoppingCart className="mr-2" /> Add To Cart
                 </button>
                 <button className="flex ml-4 text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
-                  <Link href={'/checkout'}><FaMoneyBillWave  className="mr-2" /> Buy Now</Link>
+                  <Link href={"/checkout"}>
+                    <FaMoneyBillWave className="mr-2" /> Buy Now
+                  </Link>
                 </button>
               </div>
 

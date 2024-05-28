@@ -1,11 +1,58 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { IoIosRocket } from "react-icons/io";
 import Link from "next/link";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Signup() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [password, setPassword] = useState("");
+  const notify = () => toast.success("User Created Successfully");
+  const notify2 = () => toast.error("User Not Created");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const userData = {
+      name,
+      email,
+      password,
+      mobile,
+    };
+
+    try {
+      const response = await fetch("/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Error:", data.error);
+        notify2();
+        return;
+      }
+
+      // Handle success (e.g., redirect to login page or show success message)
+      console.log("User created:", data);
+      notify();
+    } catch (error) {
+      console.error("Failed to create user:", error);
+      notify2();
+    }
+  };
+
   return (
     <div className="mx-auto max-w-lg space-y-8">
-      <div className=" mt-4 space-y-4 text-center">
+      <ToastContainer position="bottom-right" />
+      <div className="mt-4 space-y-4 text-center">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">
           Sign Up
         </h1>
@@ -13,7 +60,7 @@ export default function Signup() {
           Enter your information to create an account.
         </p>
       </div>
-      <form className="space-y-6 animate-fade-in">
+      <form className="space-y-6 animate-fade-in" onSubmit={handleSubmit}>
         <div className="space-y-3">
           <label
             className="flex items-center gap-2 text-gray-700 dark:text-gray-400"
@@ -28,6 +75,8 @@ export default function Signup() {
             placeholder="Enter your name"
             required
             type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
         </div>
         <div className="space-y-3">
@@ -41,11 +90,11 @@ export default function Signup() {
           <input
             className="w-full rounded-md border border-gray-300 px-4 py-3 text-gray-900 focus:border-[#6366F1] focus:ring-[#6366F1] dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:focus:border-[#6366F1]"
             id="email"
-            pattern='"[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$"'
             placeholder="m@example.com"
             required
-            title="Please enter a valid email address"
             type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div className="space-y-3">
@@ -59,11 +108,11 @@ export default function Signup() {
           <input
             className="w-full rounded-md border border-gray-300 px-4 py-3 text-gray-900 focus:border-[#6366F1] focus:ring-[#6366F1] dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:focus:border-[#6366F1]"
             id="phone"
-            pattern="[0-9]{10}"
             placeholder="Enter your phone number"
             required
-            title="Please enter a valid 10-digit phone number"
             type="tel"
+            value={mobile}
+            onChange={(e) => setMobile(e.target.value)}
           />
         </div>
         <div className="space-y-3">
@@ -77,22 +126,27 @@ export default function Signup() {
           <input
             className="w-full rounded-md border border-gray-300 px-4 py-3 text-gray-900 focus:border-[#6366F1] focus:ring-[#6366F1] dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:focus:border-[#6366F1]"
             id="password"
-            minLength={8}
             placeholder="Password"
             required
-            title="Password must be at least 8 characters long"
             type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <button
-          className=" w-full flex items-center justify-center space-x-2 rounded-md bg-[#6366F1] py-1 font-semibold text-white hover:bg-[#4F46E5] focus:ring-2 focus:ring-[#6366F1] animate-bounce"
+          className="w-full flex items-center justify-center space-x-2 rounded-md bg-[#6366F1] py-1 font-semibold text-white hover:bg-[#4F46E5] focus:ring-2 focus:ring-[#6366F1] animate-bounce"
           type="submit"
         >
           <IoIosRocket className="text-3xl" />
           <span>Sign Up</span>
         </button>
       </form>
-      <p className="text-center"> Already have an Account <Link href={'/login'} className="text-blue-500 underline text-lg" >Login</Link></p>
+      <p className="text-center">
+        Already have an Account{" "}
+        <Link href={"/login"} className="text-blue-500 underline text-lg">
+          Login
+        </Link>
+      </p>
     </div>
   );
 }
@@ -152,28 +206,6 @@ function PhoneIcon(props) {
       strokeLinejoin="round"
     >
       <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-    </svg>
-  );
-}
-
-function RocketIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
-      <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
-      <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
-      <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
     </svg>
   );
 }

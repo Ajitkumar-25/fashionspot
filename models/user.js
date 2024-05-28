@@ -15,8 +15,12 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    mobile: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.models.Order || mongoose.model("User", OrderSchema);
+module.exports = mongoose.models.User || mongoose.model("User", UserSchema);
