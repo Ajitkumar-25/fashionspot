@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 import { FaShoppingCart, FaMoneyBillWave } from "react-icons/fa";
+import Link from "next/link";
 
 export default function ProductPage({ params }) {
   const slug = params.slug;
@@ -10,6 +11,8 @@ export default function ProductPage({ params }) {
   const [isServiceable, setIsServiceable] = useState(null);
   const [loading, setLoading] = useState(false);
   const { addToCart } = useCart();
+  const [selsize, setselsize] = useState("");
+  const [selcolor, setselcolor] = useState("");
 
   // console.log(slug);
 
@@ -146,7 +149,10 @@ export default function ProductPage({ params }) {
                 <div className="flex ml-6">
                   <span className="mr-3 mt-2">Color</span>
                   <div className="relative">
-                    <select className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base pl-3 pr-10">
+                    <select
+                      onChange={(e) => setselcolor(e.target.value)}
+                      className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base pl-3 pr-10"
+                    >
                       {product.color.map((color, index) => (
                         <option key={index} value={color}>
                           {color}
@@ -171,7 +177,10 @@ export default function ProductPage({ params }) {
                 <div className="flex ml-6 items-center">
                   <span className="mr-3">Size</span>
                   <div className="relative">
-                    <select className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base pl-3 pr-10">
+                    <select
+                      onChange={(e) => setselsize(e.target.value)}
+                      className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base pl-3 pr-10"
+                    >
                       {product.size.map((size) => (
                         <option key={size}>{size}</option>
                       ))}
@@ -203,8 +212,8 @@ export default function ProductPage({ params }) {
                       1,
                       product.price,
                       product.title,
-                      product.size,
-                      product.color
+                      selsize,
+                      selcolor
                     );
                   }}
                   className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
@@ -212,7 +221,7 @@ export default function ProductPage({ params }) {
                   <FaShoppingCart className="mr-2" /> Add To Cart
                 </button>
                 <button className="flex ml-4 text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
-                  <FaMoneyBillWave className="mr-2" /> Buy Now
+                  <Link href={'/checkout'}><FaMoneyBillWave  className="mr-2" /> Buy Now</Link>
                 </button>
               </div>
 

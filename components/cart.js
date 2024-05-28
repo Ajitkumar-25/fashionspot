@@ -8,36 +8,9 @@ import {
 import { XMarkIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
-// const products = [
-//   {
-//     id: 1,
-//     name: "Throwback Hip Bag",
-//     href: "#",
-//     color: "Salmon",
-//     price: "$90.00",
-//     quantity: 1,
-//     imageSrc:
-//       "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg",
-//     imageAlt:
-//       "Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.",
-//   },
-//   {
-//     id: 2,
-//     name: "Medium Stuff Satchel",
-//     href: "#",
-//     color: "Blue",
-//     price: "$32.00",
-//     quantity: 1,
-//     imageSrc:
-//       "https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg",
-//     imageAlt:
-//       "Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.",
-//   },
-// ];
 
 const SidebarCart = ({ open, onClose }) => {
   const { cart, subtotal, addToCart, removeFromCart, clearCart } = useCart();
-
 
   return (
     <Transition show={open}>
@@ -117,11 +90,14 @@ const SidebarCart = ({ open, onClose }) => {
                                             </a>
                                           </h3>
                                           <p className="ml-4">
-                                            {cart[product].price}
+                                          ₹{cart[product].price}
                                           </p>
                                         </div>
                                         <p className="mt-1 text-sm text-gray-500">
                                           {cart[product].variant}
+                                        </p>
+                                        <p className="mt-1 text-sm text-gray-500">
+                                          {cart[product].size}
                                         </p>
                                       </div>
                                       <div className="flex flex-1 items-end justify-between text-sm">
@@ -169,14 +145,14 @@ const SidebarCart = ({ open, onClose }) => {
                                           </button>
                                         </div>
 
-                                        <div className="flex">
+                                        {/* <div className="flex">
                                           <button
                                             type="button"
                                             className="font-medium text-indigo-600 hover:text-indigo-500"
                                           >
                                             Remove
                                           </button>
-                                        </div>
+                                        </div> */}
                                       </div>
                                     </div>
                                   </li>
@@ -197,9 +173,11 @@ const SidebarCart = ({ open, onClose }) => {
                         Shipping and taxes calculated at checkout.
                       </p>
                       <div className="mt-6">
-                        <Link href={'/checkout'}><button className="w-full flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
-                          Checkout
-                        </button></Link>
+                        <Link href={"/checkout"}>
+                          <button className="w-full flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
+                            Checkout
+                          </button>
+                        </Link>
                       </div>
                       <div className="mt-2">
                         <button
