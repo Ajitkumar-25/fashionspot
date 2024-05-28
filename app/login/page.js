@@ -1,19 +1,60 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { IoIosRocket } from "react-icons/io";
 import Link from "next/link";
-
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const notify = () => toast.success("Logged in Successfully");
+  const notify2 = () => toast.error("Failed to login");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const userData = {
+      email,
+      password,
+    };
+
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Error:", data.error);
+        notify2();
+        return;
+      }
+
+      // Handle success (e.g., redirect to dashboard or show success message)
+      console.log("User logged in:", data);
+      notify();
+    } catch (error) {
+      console.error("Failed to login:", error);
+      notify2();
+    }
+  };
+
   return (
     <div className="mx-auto max-w-md space-y-6 h-[25rem] mt-16">
+      <ToastContainer position="bottom-right" />
       <div className="space-y-2 text-center">
         <h1 className="text-3xl font-bold">Login To Continue </h1>
         <p className="text-gray-500 dark:text-gray-400">
           Enter your email and password to Login to Your Account.
         </p>
       </div>
-      <form className="space-y-4 animate-fade-in">
+      <form className="space-y-4 animate-fade-in" onSubmit={handleSubmit}>
         <div className="space-y-2">
           <label className="flex items-center gap-2" htmlFor="email">
             <MailIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -27,6 +68,8 @@ export default function Login() {
             required
             title="Please enter a valid email address"
             type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div className="space-y-2">
@@ -42,20 +85,32 @@ export default function Login() {
             required
             title="Password must be at least 8 characters long"
             type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-      <p className="text-center"><Link href={'/forgotpassword'} className="text-blue-500 underline text-lg" >forgot password</Link></p>
-
+        <p className="text-center">
+          <Link
+            href={"/forgotpassword"}
+            className="text-blue-500 underline text-lg"
+          >
+            forgot password
+          </Link>
+        </p>
         <button
           className=" w-full flex items-center justify-center space-x-2 rounded-md bg-[#6366F1] py-1 font-semibold text-white hover:bg-[#4F46E5] focus:ring-2 focus:ring-[#6366F1] animate-bounce"
           type="submit"
         >
           <IoIosRocket className="text-3xl" />
-          <span>Sign Up</span>
+          <span>Login</span>
         </button>
       </form>
-      <p className="text-center"> Do Not have an Account <Link href={'/signup'} className="text-blue-500 underline text-lg" >Signup</Link></p>
-
+      <p className="text-center">
+        Do Not have an Account{" "}
+        <Link href={"/signup"} className="text-blue-500 underline text-lg">
+          Signup
+        </Link>
+      </p>
     </div>
   );
 }
@@ -96,28 +151,6 @@ function MailIcon(props) {
     >
       <rect width="20" height="16" x="2" y="4" rx="2" />
       <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-    </svg>
-  );
-}
-
-function RocketIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
-      <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
-      <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
-      <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
     </svg>
   );
 }
