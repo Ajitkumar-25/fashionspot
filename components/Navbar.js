@@ -6,10 +6,16 @@ import SidebarCart from "@/components/cart";
 import { MdAccountCircle } from "react-icons/md";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useCart } from "@/context/CartContext";
 
 const Navbar = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState({ value: null });
+  const { cart } = useCart();
+
+  // Calculate total quantity of items in the cart
+  const totalUniqueItems = Object.keys(cart).length;
+
   const notify = () => toast.success("Logged out Successfully");
 
   useEffect(() => {
@@ -86,6 +92,13 @@ const Navbar = () => {
             onClick={toggleCart}
           >
             <AiOutlineShoppingCart className="text-4xl  text-black " />
+            <div>
+              {totalUniqueItems > 0 && (
+                <span className="text-xl text-white bg-red-600 rounded-full  ">
+                  {totalUniqueItems}
+                </span>
+              )}
+            </div>
           </button>
         </div>
       </header>

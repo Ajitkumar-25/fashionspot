@@ -1,8 +1,21 @@
+"use client";
 import React from "react";
+import { useCart } from "@/context/CartContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Link from "next/link";
 
 const Checkout = () => {
+  const { subtotal } = useCart();
+  const shipping = 60;
+  const taxes = 0.05 * subtotal;
+  const total = subtotal + shipping + taxes;
+
+  
+
   return (
     <div className="max-w-4xl mx-auto px-4 md:px-6 py-12">
+      <ToastContainer position="bottom-right" />
       <div className="grid gap-8">
         <div>
           <h1 className="text-3xl font-bold">Checkout</h1>
@@ -47,20 +60,20 @@ const Checkout = () => {
               <div className="grid gap-2">
                 <div className="flex items-center justify-between">
                   <p>Subtotal</p>
-                  <p>$179.94</p>
+                  <p> ₹{subtotal.toFixed(2)}</p>
                 </div>
                 <div className="flex items-center justify-between">
                   <p>Shipping</p>
-                  <p>$5.99</p>
+                  <p> ₹{shipping}</p>
                 </div>
                 <div className="flex items-center justify-between">
                   <p>Taxes</p>
-                  <p>$14.40</p>
+                  <p>₹{taxes}</p>
                 </div>
 
                 <div className="flex items-center justify-between font-bold">
                   <p>Total</p>
-                  <p>$200.33</p>
+                  <p>₹{total}</p>
                 </div>
               </div>
               <div className="grid gap-2">
@@ -74,9 +87,13 @@ const Checkout = () => {
                     Apply
                   </button>
                 </div>
-                <button className="w-full flex items-center justify-center rounded-md border border-transparent bg-green-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-green-700">
+                <Link href={'/payment'}>
+                <button
+                  className="w-full flex items-center justify-center rounded-md border border-transparent bg-green-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-green-700"
+                >
                   Place Order
                 </button>
+                </Link>
               </div>
             </div>
           </div>
