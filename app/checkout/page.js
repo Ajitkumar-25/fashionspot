@@ -13,6 +13,11 @@ const Checkout = () => {
   const [city, setcity] = useState("");
   const [state, setstate] = useState("");
 
+  const { subtotal, cart, clearCart } = useCart();
+  const shipping = 60;
+  const taxes = 0.05 * subtotal;
+  const total = subtotal + shipping + taxes;
+
   const handlechange = (e) => {
     // e.preventDefault()
     const { name, value } = e.target;
@@ -88,13 +93,10 @@ const Checkout = () => {
       toast.error("Failed to place order");
     }
 
+    clearCart();
+
     console.log(name, email, phone, address, city, pincode, state);
   };
-
-  const { subtotal, cart } = useCart();
-  const shipping = 60;
-  const taxes = 0.05 * subtotal;
-  const total = subtotal + shipping + taxes;
 
   return (
     <div className="max-w-4xl mx-auto px-4 md:px-6 py-2">
