@@ -1,6 +1,46 @@
-import React from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 
 const Orders = () => {
+  const [orders, setorders] = useState([]);
+  const [email, setEmail] = useState(null);
+
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("userInfo");
+    if (storedEmail) {
+      setEmail(storedEmail);
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!email) return;
+
+      try {
+        const res = await fetch("/api/getorders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch orders");
+        }
+
+        const data = await res.json();
+        setorders(data);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+
+    fetchData();
+  }, [email]);
+
+
+  console.log(orders);
   return (
     <div className="container mx-auto">
       <h1 className="font-bold text-2xl mx-6 my-4">My Orders</h1>
@@ -12,7 +52,7 @@ const Orders = () => {
                 Order ID
               </th>
               <th scope="col" className="px-6 py-3">
-                Customer Name
+                Customer Email
               </th>
               <th scope="col" className="px-6 py-3">
                 Order Date
@@ -26,58 +66,25 @@ const Orders = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-              <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                #12345
-              </td>
-              <td className="px-6 py-4">John Doe</td>
-              <td className="px-6 py-4">2023-06-01</td>
-              <td className="px-6 py-4">$99.99</td>
-              <td className="px-6 py-4">
-                <span className="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
-                  Delivered
-                </span>
-              </td>
-            </tr>
-            <tr className="bg-gray-50 border-b dark:bg-gray-700 dark:border-gray-600">
-              <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                #12346
-              </td>
-              <td className="px-6 py-4">Jane Smith</td>
-              <td className="px-6 py-4">2023-05-15</td>
-              <td className="px-6 py-4">$79.99</td>
-              <td className="px-6 py-4">
-                <span className="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-700 dark:text-yellow-200">
-                  Pending
-                </span>
-              </td>
-            </tr>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-              <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                #12347
-              </td>
-              <td className="px-6 py-4">Bob Johnson</td>
-              <td className="px-6 py-4">2023-04-30</td>
-              <td className="px-6 py-4">$129.99</td>
-              <td className="px-6 py-4">
-                <span className="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
-                  Cancelled
-                </span>
-              </td>
-            </tr>
-            <tr className="bg-gray-50 border-b dark:bg-gray-700 dark:border-gray-600">
-              <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                #12348
-              </td>
-              <td className="px-6 py-4">Sarah Lee</td>
-              <td className="px-6 py-4">2023-03-20</td>
-              <td className="px-6 py-4">$59.99</td>
-              <td className="px-6 py-4">
-                <span className="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                  Shipped
-                </span>
-              </td>
-            </tr>
+            {orders.length > 0 ? (
+              orders.map(order => (
+                <tr key={order._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{order.orderId}</td>
+                  <td className="px-6 py-4">{order.email}</td>
+                  <td className="px-6 py-4">{new Date(order.createdAt).toLocaleDateString()}</td>
+                  <td className="px-6 py-4">{order.amount}</td>
+                  <td className="px-6 py-4">
+                    <span className={`bg-${order.status === 'Delivered' ? 'green' : order.status === 'Pending' ? 'yellow' : order.status === 'Cancelled' ? 'red' : 'blue'}-100 text-${order.status === 'Delivered' ? 'green' : order.status === 'Pending' ? 'yellow' : order.status === 'Cancelled' ? 'red' : 'blue'}-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-${order.status === 'Delivered' ? 'green' : order.status === 'Pending' ? 'yellow' : order.status === 'Cancelled' ? 'red' : 'blue'}-900 dark:text-${order.status === 'Delivered' ? 'green' : order.status === 'Pending' ? 'yellow' : order.status === 'Cancelled' ? 'red' : 'blue'}-300`}>
+                      {order.status}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="px-6 py-4 text-center">No orders found</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

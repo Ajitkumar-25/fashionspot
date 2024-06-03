@@ -40,8 +40,11 @@ export default function Login() {
 
       // Handle success (e.g., redirect to dashboard or show success message)
       console.log("User logged in:", data);
+      // console.log(data.user)
       notify();
       localStorage.setItem("token", data.token);
+      localStorage.setItem("userInfo",data.user.email)
+
       // window.location.reload();
       setTimeout(router.push("/"), 1000);
     } catch (error) {
