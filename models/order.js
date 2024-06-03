@@ -2,13 +2,21 @@ const mongoose = require("mongoose");
 
 const OrderSchema = new mongoose.Schema(
   {
-    userId: {
+    email: {
       type: String,
       required: true,
     },
+    orderId: {
+      type: String,
+      required: true,
+    },
+    paymentInfo: {
+      type: String,
+      default: "pending",
+    },
     products: [
       {
-        productId: {
+        name: {
           type: String,
         },
         quantity: {
@@ -34,4 +42,4 @@ const OrderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.models.Order || mongoose.model('Order', OrderSchema);
+module.exports = mongoose.models.Order || mongoose.model("Order", OrderSchema);
