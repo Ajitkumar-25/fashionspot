@@ -119,6 +119,12 @@ export default function Login() {
           Signup
         </Link>
       </p>
+      <p className="text-center">
+        Are You An admin{" "}
+        <Link href={"/admin/dashboard"} className="text-blue-500 underline text-lg">
+          Admin
+        </Link>
+      </p>
     </div>
   );
 }
