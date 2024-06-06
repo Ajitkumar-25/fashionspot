@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 
 const AddProduct = () => {
-  // State variables for form inputs
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
@@ -12,6 +11,32 @@ const AddProduct = () => {
   const [color, setColor] = useState("");
   const [price, setPrice] = useState("");
   const [availableQty, setavailableQty] = useState("");
+  const [uploading, setUploading] = useState(false);
+
+  const handleImageUpload = () => {
+    const file = document.querySelector('input[type="file"]').files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "fashionspot");
+    setUploading(true);
+    fetch(
+      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setImage(data.secure_url);
+        setUploading(false);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        setUploading(false);
+      });
+  };
 
   // Function to handle form submission
   const handleSubmit = (event) => {
@@ -138,9 +163,9 @@ const AddProduct = () => {
                         id="image"
                         type="file"
                         className="sr-only"
-                        value={image}
-                        onChange={(e) => setImage(e.target.value)}
+                        onChange={handleImageUpload}
                       />
+                      {uploading && <p>Uploading...</p>}
                     </div>
                   </div>
                   <div className="grid gap-2">
