@@ -11,11 +11,14 @@ const AddProduct = () => {
   const [size, setSize] = useState("");
   const [color, setColor] = useState("");
   const [price, setPrice] = useState("");
-  const [quantity, setQuantity] = useState("");
+  const [availableQty, setavailableQty] = useState("");
 
   // Function to handle form submission
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    const processedSize = size.split(/\s+/).filter(Boolean);
+    const processedColor = color.split(/\s+/).filter(Boolean);
 
     // Retrieve data from state variables
     const formData = {
@@ -24,25 +27,30 @@ const AddProduct = () => {
       description,
       image,
       category,
-      size,
-      color,
+      size: processedSize,
+      color: processedColor,
       price,
-      quantity,
+      availableQty,
     };
 
     // Do something with formData (e.g., send it to server)
     console.log(formData);
 
-    // Clear form fields after submission
-    setTitle("");
-    setSlug("");
-    setDescription("");
-    setImage("");
-    setCategory("");
-    setSize("");
-    setColor("");
-    setPrice("");
-    setQuantity("");
+    //send data to server
+    fetch("/api/addproduct", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   return (
@@ -60,10 +68,7 @@ const AddProduct = () => {
                   store.
                 </p>
               </div>
-              <form
-                
-                className="grid gap-6 animate-fade-in"
-              >
+              <form className="grid gap-6 animate-fade-in">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="grid gap-2">
                     <label htmlFor="title" className="text-sm font-medium">
@@ -150,7 +155,7 @@ const AddProduct = () => {
                         className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-primary-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
                       >
                         <option value="">Select category</option>
-                        <option value="tshirts">Tshirts</option>
+                        <option value="tshirt">Tshirts</option>
                         <option value="hoodies">Hoodies</option>
                         <option value="mugs">Mugs</option>
                         <option value="stickers">Stickers</option>
@@ -206,13 +211,13 @@ const AddProduct = () => {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="grid gap-2">
                     <label htmlFor="quantity" className="text-sm font-medium">
-                      Quantity
+                      Available Quantity
                     </label>
                     <input
-                      id="quantity"
+                      id="availableQty"
                       type="number"
-                      value={quantity}
-                      onChange={(e) => setQuantity(e.target.value)}
+                      value={availableQty}
+                      onChange={(e) => setavailableQty(e.target.value)}
                       placeholder="Enter available quantity"
                       className="block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-primary-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400"
                     />
