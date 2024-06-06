@@ -4,6 +4,8 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 
 const ProductCardGrid = () => {
   const [products, setProducts] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     fetch("/api/fetchallproducts")
@@ -13,10 +15,7 @@ const ProductCardGrid = () => {
       });
   }, []);
 
-  console.log(products);
-
   const handleDeleteProduct = (productId) => {
-    console.log(productId);
     fetch("/api/deleteproduct", {
       method: "DELETE",
       headers: {
@@ -36,16 +35,43 @@ const ProductCardGrid = () => {
       });
   };
 
+  const handleUpdateProduct = (product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const handleSaveProduct = () => {
+    fetch("/api/updateproduct", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(selectedProduct),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts((prevProducts) =>
+          prevProducts.map((product) =>
+            product._id === data._id ? data : product
+          )
+        );
+        setIsModalOpen(false);
+      })
+      .catch((error) => {
+        console.error("Error updating product:", error);
+      });
+  };
+
   return (
     <div className="container mx-auto p-4">
       <div className="my-1">
         <h1 className="text-center my-2 text-4xl font-bold">All Products</h1>
       </div>
-      <div className=" my-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="my-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((product, index) => (
           <div
             key={index}
-            className="bg-white m-2 shadow-2xl  rounded-lg overflow-hidden "
+            className="bg-white m-2 shadow-2xl rounded-lg overflow-hidden"
           >
             <img
               src={product.image}
@@ -75,7 +101,10 @@ const ProductCardGrid = () => {
                 </span>
               </div>
               <div className="mt-4 flex justify-center items-center">
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center mr-4">
+                <button
+                  onClick={() => handleUpdateProduct(product)}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center mr-4"
+                >
                   <FaEdit className="mr-2" /> Update
                 </button>
                 <button
@@ -89,6 +118,108 @@ const ProductCardGrid = () => {
           </div>
         ))}
       </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-3xl">
+            <h2 className="text-xl font-bold mb-4">Update Product</h2>
+            <div>
+              <label className="block mb-2">Title:</label>
+              <input
+                type="text"
+                value={selectedProduct.title}
+                onChange={(e) =>
+                  setSelectedProduct({
+                    ...selectedProduct,
+                    title: e.target.value,
+                  })
+                }
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block mb-2">Description:</label>
+              <textarea
+                value={selectedProduct.description}
+                onChange={(e) =>
+                  setSelectedProduct({
+                    ...selectedProduct,
+                    description: e.target.value,
+                  })
+                }
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block mb-2">Price:</label>
+              <input
+                type="number"
+                value={selectedProduct.price}
+                onChange={(e) =>
+                  setSelectedProduct({ ...selectedProduct, price: e.target.value })
+                }
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block mb-2">Available Quantity:</label>
+              <input
+                type="number"
+                value={selectedProduct.availableQty}
+                onChange={(e) =>
+                  setSelectedProduct({
+                    ...selectedProduct,
+                    availableQty: e.target.value,
+                  })
+                }
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block mb-2">Sizes:</label>
+              <input
+                type="text"
+                value={selectedProduct.size.join(", ")}
+                onChange={(e) =>
+                  setSelectedProduct({
+                    ...selectedProduct,
+                    size: e.target.value.split(",").map((s) => s.trim()),
+                  })
+                }
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div>
+              <label className="block mb-2">Colors:</label>
+              <input
+                type="text"
+                value={selectedProduct.color.join(", ")}
+                onChange={(e) =>
+                  setSelectedProduct({
+                    ...selectedProduct,
+                    color: e.target.value.split(",").map((c) => c.trim()),
+                  })
+                }
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveProduct}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
