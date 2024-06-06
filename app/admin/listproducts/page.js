@@ -1,11 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProductCardGrid = () => {
   const [products, setProducts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
 
   useEffect(() => {
     fetch("/api/fetchallproducts")
@@ -15,23 +19,28 @@ const ProductCardGrid = () => {
       });
   }, []);
 
-  const handleDeleteProduct = (productId) => {
+  const handleDeleteProduct = () => {
     fetch("/api/deleteproduct", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ productId }),
+      body: JSON.stringify({ productId: productToDelete }),
     })
       .then((res) => {
         if (res.ok) {
-          setProducts(products.filter((product) => product._id !== productId));
+          setProducts(products.filter((product) => product._id !== productToDelete));
+          toast.success("Product deleted successfully");
         } else {
           throw new Error("Failed to delete product");
         }
       })
       .catch((error) => {
         console.error("Error deleting product:", error);
+        toast.error("Error deleting product");
+      })
+      .finally(() => {
+        setIsConfirmModalOpen(false);
       });
   };
 
@@ -56,14 +65,17 @@ const ProductCardGrid = () => {
           )
         );
         setIsModalOpen(false);
+        toast.success("Product updated successfully");
       })
       .catch((error) => {
         console.error("Error updating product:", error);
+        toast.error("Error updating product");
       });
   };
 
   return (
     <div className="container mx-auto p-4">
+      <ToastContainer position="bottom-right" />
       <div className="my-1">
         <h1 className="text-center my-2 text-4xl font-bold">All Products</h1>
       </div>
@@ -108,7 +120,10 @@ const ProductCardGrid = () => {
                   <FaEdit className="mr-2" /> Update
                 </button>
                 <button
-                  onClick={() => handleDeleteProduct(product._id)}
+                  onClick={() => {
+                    setProductToDelete(product._id);
+                    setIsConfirmModalOpen(true);
+                  }}
                   className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded flex items-center"
                 >
                   <FaTrash className="mr-2" /> Delete
@@ -215,6 +230,29 @@ const ProductCardGrid = () => {
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               >
                 Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isConfirmModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 max-w-sm">
+            <h2 className="text-xl font-bold mb-4">Confirm Delete</h2>
+            <p>Are you sure you want to delete this product?</p>
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={() => setIsConfirmModalOpen(false)}
+                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteProduct}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Delete
               </button>
             </div>
           </div>
