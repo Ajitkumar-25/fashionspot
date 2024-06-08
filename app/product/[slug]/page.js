@@ -16,11 +16,9 @@ export default function ProductPage({ params }) {
   const [selsize, setselsize] = useState("");
   const [selcolor, setselcolor] = useState("");
 
-  const notify = () => toast("Product Added To cart!");
+  const notify = () => toast.success("Product Added To cart!");
   const notify2 = () => toast.success("Your Pincode is Servicable");
   const notify3 = () => toast.error("Your Pincode is Not Servicable");
-
-  // console.log(slug);
 
   useEffect(() => {
     if (slug) {
@@ -53,17 +51,17 @@ export default function ProductPage({ params }) {
       if (result.success) {
         setIsServiceable(result.serviceable);
         if (result.serviceable) {
-          notify2(); // Notify success if the pincode is serviceable
+          notify2();
         } else {
-          notify3(); // Notify error if the pincode is not serviceable
+          notify3();
         }
       } else {
         setIsServiceable(false);
-        notify3(); // Notify error if the pincode is not serviceable
+        notify3();
       }
     } catch (error) {
       console.error(error);
-      notify3(); // Notify error in case of any error
+      notify3();
     } finally {
       setLoading(false);
     }
@@ -77,19 +75,21 @@ export default function ProductPage({ params }) {
           <div className="lg:w-4/5 mx-auto flex flex-wrap">
             <img
               alt="ecommerce"
-              className="lg:w-1/2 w-full lg:h-auto px-24 object-fit object-center rounded"
+              className="lg:w-1/2 w-full lg:h-auto object-cover object-center rounded-lg"
               src={product.image}
+              style={{
+                height: "400px",
+              }}
             />
             <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
-              <h2 className="text-sm title-font text-gray-500 tracking-widest">
-                {product.category.toUpperCase()}
+              <h2 className="text-sm title-font text-gray-500 tracking-widest uppercase">
+                {product.category}
               </h2>
               <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">
                 {product.title}
               </h1>
               <div className="flex mb-4">
                 <span className="flex items-center">
-                  {/* Star ratings */}
                   {Array(4)
                     .fill()
                     .map((_, index) => (
@@ -160,8 +160,8 @@ export default function ProductPage({ params }) {
               </div>
               <p className="leading-relaxed">{product.description}</p>
               <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
-                <div className="flex ml-6">
-                  <span className="mr-3 mt-2">Color</span>
+                <div className="flex ml-6 items-center">
+                  <span className="mr-3">Color</span>
                   <div className="relative">
                     <select
                       onChange={(e) => setselcolor(e.target.value)}
@@ -215,7 +215,7 @@ export default function ProductPage({ params }) {
                   </div>
                 </div>
               </div>
-              <div className="flex">
+              <div className="flex justify-between ">
                 <span className="title-font font-medium text-2xl text-gray-900">
                   ${product.price}
                 </span>
@@ -231,14 +231,9 @@ export default function ProductPage({ params }) {
                     );
                     notify();
                   }}
-                  className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+                  className="flex  text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded transition duration-300 ease-in-out transform hover:scale-105"
                 >
                   <FaShoppingCart className="mr-2" /> Add To Cart
-                </button>
-                <button className="flex ml-4 text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded">
-                  <Link href={"/checkout"}>
-                    <FaMoneyBillWave className="mr-2" /> Buy Now
-                  </Link>
                 </button>
               </div>
 
